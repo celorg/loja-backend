@@ -10,6 +10,15 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './guards/roles.guard';
 import { JwtModule } from '@nestjs/jwt';
+import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
+import { CartModule } from './cart/cart.module';
+import { CartProductModule } from './cart-product/cart-product.module';
+import { PaymentStatusModule } from './payment_status/payment_status.module';
+import { PaymentModule } from './payment/payment.module';
+import { OrderModule } from './order/order.module';
+import { OrderProductModule } from './order-product/order-product.module';
+import { CorreiosModule } from './correios/correios.module';
 
 @Module({
   imports: [
@@ -22,9 +31,17 @@ import { JwtModule } from '@nestjs/jwt';
     AddressModule,
     CacheModule,
     AuthModule,
-    JwtModule
+    JwtModule,
+    CategoryModule,
+    ProductModule,
+    CartModule,
+    CartProductModule,
+    PaymentStatusModule,
+    PaymentModule,
+    OrderModule,
+    OrderProductModule,
+    CorreiosModule
   ],
-  controllers: [],
   providers: [DatabaseModule,
     {
       provide: APP_GUARD,

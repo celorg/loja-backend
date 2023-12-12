@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { StateController } from './state.controller';
 import { StateService } from './state.service';
-import { DatabaseModule } from 'src/database/database.module';
+import { DatabaseModule } from '../database/database.module';
 import { stateProvider } from './state.provider';
 
 @Module({

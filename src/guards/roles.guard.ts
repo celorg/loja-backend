@@ -1,9 +1,9 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { LoginPayloadDto } from 'src/auth/dtos/loginPayload.dto';
-import { ROLES_KEY } from 'src/decorators/roles.decorator';
-import { UserType } from 'src/user/enum/user-type.enum';
+import { LoginPayloadDto } from '../auth/dtos/loginPayload.dto';
+import { ROLES_KEY } from '../decorators/roles.decorator';
+import { UserType } from '../user/enum/user-type.enum';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -33,7 +33,6 @@ export class RolesGuard implements CanActivate {
       throw new UnauthorizedException('Acesso negado!');
     }
     
-
     return requiredRoles.some((role) => role === loginPayload.typeUser);
   }
 }

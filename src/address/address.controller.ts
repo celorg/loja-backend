@@ -1,12 +1,12 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateAddressDto } from './dtos/createAddress.dto';
 import { AddressService } from './address.service';
 import { AddressEntity } from './entities/address.entity';
-import { Roles } from 'src/decorators/roles.decorator';
-import { UserType } from 'src/user/enum/user-type.enum';
-import { UserID } from 'src/decorators/user-id.decorator';
+import { Roles } from '../decorators/roles.decorator';
+import { UserType } from '../user/enum/user-type.enum';
+import { UserID } from '../decorators/user-id.decorator';
 
-@Roles(UserType.User)
+@Roles(UserType.User, UserType.Admin)
 @Controller('address')
 export class AddressController {
 
@@ -20,6 +20,11 @@ export class AddressController {
             @UserID() userId: string
         ): Promise<AddressEntity> {
         return this.addressService.createAddress(createAddressDto, userId)
+    }
+
+    @Get()
+    async findAddressById(@UserID() userId: string) {
+        return this.addressService.findAddressById(userId);
     }
 
 }

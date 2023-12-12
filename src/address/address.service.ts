@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { AddressEntity } from './entities/address.entity';
 import { CreateAddressDto } from './dtos/createAddress.dto';
-import { UserService } from 'src/user/user.service';
-import { CityService } from 'src/city/city.service';
+import { UserService } from '../user/user.service';
+import { CityService } from '../city/city.service';
 
 @Injectable()
 export class AddressService {
@@ -23,6 +23,20 @@ export class AddressService {
             ...createAddressDto,
             userId
         });
+    }
+
+    async findAddressById(userId: string): Promise<AddressEntity[]> {
+        const address =  this.addressRepository.find({
+            where: {
+                userId
+            }
+        });
+
+        if(!address){
+            throw new NotFoundException('Esse usúario não tem nenhum endereço cadastrado!')
+        }
+
+        return address;
     }
 
 }

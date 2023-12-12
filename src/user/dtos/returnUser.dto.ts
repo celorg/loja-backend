@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, Generated, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { UserEntity } from "../entities/user.entity";
-import { ReturnAddressDto } from "src/address/dtos/returnAddress.dto";
+import { ReturnAddressDto } from "../../address/dtos/returnAddress.dto";
 
 @Entity({name: 'user'})
 export class ReturnUserDto {
