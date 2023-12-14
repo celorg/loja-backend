@@ -16,13 +16,13 @@ export class CartController {
         private readonly cartService: CartService,
     ){}
 
-    @Roles(UserType.Admin, UserType.User)
+    @Roles(UserType.Admin, UserType.Root, UserType.User)
     @Post()
     async insertProductInCart(@Body() insertCart: InsertCart, @UserID() userId: string): Promise<ReturnCartDto> {
         return new ReturnCartDto(await this.cartService.insertProductInCart(insertCart, userId));
     }   
 
-    @Roles(UserType.User, UserType.Admin)
+    @Roles(UserType.User, UserType.Admin, UserType.Root)
     @Get()
     async findCartWithRelations(@UserID() userId: string): Promise<ReturnCartDto> {
         return new ReturnCartDto(await this.cartService.findCartWithRelations(userId));

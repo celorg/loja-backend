@@ -7,7 +7,7 @@ import { Roles } from '../decorators/roles.decorator';
 import { UserType } from '../user/enum/user-type.enum';
 import { ReturnOrderDto } from './dtos/return-order.dto';
 
-@Roles(UserType.Admin, UserType.User)
+@Roles(UserType.Admin, UserType.Root, UserType.User)
 @Controller('order')
 export class OrderController {
 
@@ -28,7 +28,7 @@ export class OrderController {
         return this.orderService.findOrderByUserId(userId);
     };
 
-    @Roles(UserType.Admin)
+    @Roles(UserType.Admin, UserType.Root)
     @Get('/all')
     async findAllOrder(): Promise<ReturnOrderDto[]> {
         return (await this.orderService.findAllOrders()).map((order) => new ReturnOrderDto(order))

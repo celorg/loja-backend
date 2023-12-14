@@ -17,12 +17,12 @@ import { DeleteResult } from 'typeorm';
 import { UpdateProductDTO } from './dtos/update-product.dto';
 import { ReturnInfoProduct } from './dtos/return-info-product';
 
-@Roles(UserType.Admin, UserType.User)
+@Roles(UserType.Admin, UserType.Root, UserType.User)
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Roles(UserType.Admin, UserType.User)
+  @Roles(UserType.Admin, UserType.Root, UserType.User)
   @Get()
   async findAll(): Promise<ReturnProduct[]> {
     return (await this.productService.findAll()).map(
@@ -30,7 +30,7 @@ export class ProductController {
     );
   }
 
-  @Roles(UserType.Admin)
+  @Roles(UserType.Admin, UserType.Root)
   @Post()
   async createProduct(
     @Body() createProduct: CreateProduct,
@@ -38,7 +38,7 @@ export class ProductController {
     return this.productService.createProduct(createProduct);
   }
 
-  @Roles(UserType.Admin)
+  @Roles(UserType.Admin, UserType.Root)
   @Delete('/:productId')
   async deleteProduct(
     @Param('productId') productId: string,
@@ -46,7 +46,7 @@ export class ProductController {
     return this.productService.delelteProduct(productId);
   }
 
-  @Roles(UserType.Admin)
+  @Roles(UserType.Admin, UserType.Root)
   @Patch('/:productId')
   async updateProduct(
     @Body() updateProduct: UpdateProductDTO,
@@ -55,7 +55,7 @@ export class ProductController {
     return this.productService.updateProduct(updateProduct, productId);
   }
 
-  @Roles(UserType.Admin, UserType.User)
+  @Roles(UserType.Admin, UserType.Root, UserType.User)
   @Get('/:productId/delivery/:cep')
   async findPriceDelivery(
     @Param('productId') productId: string,
@@ -64,7 +64,7 @@ export class ProductController {
     return this.productService.findPriceDelivery(cep, productId);
   }
 
-  @Roles(UserType.Admin)
+  @Roles(UserType.Admin, UserType.Root)
   @Get('/:productId/info')
   async findProductInfo(
     @Param('productId') productId: string,
