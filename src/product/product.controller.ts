@@ -38,6 +38,13 @@ export class ProductController {
     return this.productService.createProduct(createProduct);
   }
 
+  @Roles(UserType.Admin, UserType.Root, UserType.User)
+  @Get('/:productId')
+  async findProductById(@Param('productId') productId: string): Promise<ReturnProduct> {
+    return new ReturnProduct (await this.productService.findProductById(productId));
+  }
+
+
   @Roles(UserType.Admin, UserType.Root)
   @Delete('/:productId')
   async deleteProduct(

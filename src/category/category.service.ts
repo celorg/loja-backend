@@ -1,5 +1,5 @@
 import { BadGatewayException, BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CategoryEntity } from './entities/category.entity';
 import { NotFoundError } from 'rxjs';
 import { CreateCategory } from './dtos/create-category';
@@ -40,9 +40,15 @@ export class CategoryService {
         return categories.map((category) => new ReturnCategoryDto(category, this.findAmountCategoryInProducts(category, count)));
     }
 
-    async findCategoryById(categoryId: number): Promise<CategoryEntity>{
+    async findCategoryById(categoryId: number, isRelations?: boolean): Promise<CategoryEntity>{
+
+        const relations = isRelations ? {
+            products: true
+        } : undefined;
+
         const category = await this.categoryRepository.findOne({
-            where: { id: categoryId }
+            where: { id: categoryId }, 
+            relations
         });
 
         if(!category){
@@ -85,6 +91,15 @@ export class CategoryService {
         return category;
     }
 
-    
+    async deleteCategory(categoryId: number): Promise<DeleteResult> {
+
+        const category = await this.findCategoryById(categoryId, true);
+
+        if(category.products?.length > 0){
+            throw new BadGatewayException('Existe alguns produtos relacionados a essa categoria!');
+        }
+
+        return this.categoryRepository.delete({id: categoryId});
+    };
 
 }
