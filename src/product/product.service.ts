@@ -4,7 +4,7 @@ import {
   NotFoundException,
   forwardRef,
 } from '@nestjs/common';
-import { DeleteResult, In, Repository } from 'typeorm';
+import { DeleteResult, ILike, In, Like, Repository } from 'typeorm';
 import { ProductEntity } from './entities/product.entity';
 import { CreateProduct } from './dtos/create-product.dto';
 import { CategoryService } from '../category/category.service';
@@ -27,7 +27,9 @@ export class ProductService {
   ) {}
 
   async findAll(): Promise<ProductEntity[]> {
+
     const products = await this.productRepository.find({
+    
       relations: {
         category: true,
       },
@@ -35,6 +37,25 @@ export class ProductService {
 
     if (!products || products.length === 0) {
       throw new NotFoundException('Ainda não existe nenhum produto!');
+    }
+
+    return products;
+  }
+
+  async findAllPage(search?: string): Promise<ProductEntity[]> {
+
+    if(!search){
+      throw new NotFoundException('Nenhum produto encontrado!');
+    };
+
+    const products = await this.productRepository.find({
+      where: {
+        name: ILike(`%${search}%`)
+      }
+    })
+
+    if (!products || products.length === 0) {
+      throw new NotFoundException('Nenhum produto encontrado!');
     }
 
     return products;

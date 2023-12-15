@@ -3,9 +3,11 @@ import {
   Controller,
   Delete,
   Get,
+  HostParam,
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { UserType } from '../user/enum/user-type.enum';
 import { Roles } from '../decorators/roles.decorator';
@@ -26,6 +28,14 @@ export class ProductController {
   @Get()
   async findAll(): Promise<ReturnProduct[]> {
     return (await this.productService.findAll()).map(
+      (product) => new ReturnProduct(product),
+    );
+  }
+
+  @Roles(UserType.Admin, UserType.Root, UserType.User)
+  @Get('/page')
+  async findAllPage(@Query('search') search: string): Promise<ReturnProduct[]> {
+    return (await this.productService.findAllPage(search)).map(
       (product) => new ReturnProduct(product),
     );
   }
