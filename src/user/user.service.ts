@@ -4,7 +4,7 @@ import { UserEntity } from "./entities/user.entity";
 import { hash } from "bcrypt";
 import { Repository } from "typeorm";
 import { UpdatePasswordDTO } from "./dtos/update-password.dto";
-import { createPassword, validatePassword } from "src/utils/password";
+import { createPassword, validatePassword } from "../utils/password";
 import { UserType } from "./enum/user-type.enum";
 import { Roles } from "../decorators/roles.decorator";
 import { ReturnUserDto } from "./dtos/returnUser.dto";
