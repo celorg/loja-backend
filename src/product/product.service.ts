@@ -10,9 +10,11 @@ import { CreateProduct } from './dtos/create-product.dto';
 import { CategoryService } from '../category/category.service';
 import { UpdateProductDTO } from './dtos/update-product.dto';
 import { CountProduct } from './dtos/count-product.dto';
-import { CorreiosService } from 'src/correios/correios.service';
-import { InfoProductDTO } from 'src/correios/dtos/size-product.dto';
+import { CorreiosService } from '../correios/correios.service';
+import { InfoProductDTO } from '../correios/dtos/size-product.dto';
 import { ReturnPriceDeliveryDTO } from './dtos/return-price-delivery.dto';
+import { Pagination, PaginationMeta } from '../dtos/pagination.dto';
+
 
 @Injectable()
 export class ProductService {
@@ -42,23 +44,32 @@ export class ProductService {
     return products;
   }
 
-  async findAllPage(search?: string): Promise<ProductEntity[]> {
+  async findAllPage(search?: string, size?: number, page?: number): Promise<Pagination<ProductEntity[]>> {
 
-    if(!search){
-      throw new NotFoundException('Nenhum produto encontrado!');
-    };
+    const dSize = size ? size : 10;
 
-    const products = await this.productRepository.find({
+    const dPage = page ? page : 1;
+
+    const skip = (dPage - 1) * dSize;
+
+    const [products, total] = await this.productRepository.findAndCount({
       where: {
         name: ILike(`%${search}%`)
-      }
-    })
+      },
+      take: dSize,
+      skip: skip,
+    });
 
-    if (!products || products.length === 0) {
+    if (!products || total === 0) {
       throw new NotFoundException('Nenhum produto encontrado!');
     }
 
-    return products;
+    return new Pagination(new PaginationMeta(
+      size,
+      total,
+      dPage,
+      Math.ceil(total / dSize)
+    ), products);
   }
 
   async findProductByListProductID(
