@@ -19,6 +19,8 @@ import { PaymentModule } from './payment/payment.module';
 import { OrderModule } from './order/order.module';
 import { OrderProductModule } from './order-product/order-product.module';
 import { CorreiosModule } from './correios/correios.module';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+
 
 @Module({
   imports: [
@@ -40,13 +42,21 @@ import { CorreiosModule } from './correios/correios.module';
     PaymentModule,
     OrderModule,
     OrderProductModule,
-    CorreiosModule
+    CorreiosModule,
   ],
   providers: [DatabaseModule,
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard
+    }
+
+  ],
+  controllers: [
+    
   ],
 })
 export class AppModule {}

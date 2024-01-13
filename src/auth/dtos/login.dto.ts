@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 
 export class LoginDto {
-    @IsEmail(undefined, {message: "Adicione um e-mail válido!"})
+    @IsEmail(undefined, {message: "Adicione um e-mail válido!", context: 'email'})
     @IsNotEmpty({message: 'O email é obrigatória!'})
     email: string;
 
