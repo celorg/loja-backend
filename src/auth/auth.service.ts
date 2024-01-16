@@ -35,19 +35,12 @@ export class AuthService {
     // }
 
     async login(user: UserEntity): Promise<ReturnLoginDto>{
-        // console.log(loginDto);
-        
-        const payload: UserPayload = {
-            sub: user.id,
-            email: user.email,
-            name: user.name,
-            typeUser: user.typeUser,
-        }
 
-        const jwtToken = this.jwtService.sign(payload);
+        const tokens = await this.getTokens(user)
 
        return {
-        accessToken: this.jwtService.sign({...new LoginPayloadDto(user)}),
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
         user: new ReturnUserDto(user)
        };
 
@@ -67,6 +60,34 @@ export class AuthService {
             ...user,
             password: undefined
         };
+    }
+
+    async getTokens(user: UserEntity) {
+
+        const payload: UserPayload = {
+            sub: user.id,
+            email: user.email,
+            name: user.name,
+            typeUser: user.typeUser,
+        }
+
+        const [at, rt] = await Promise.all([
+            this.jwtService.signAsync(payload, {
+                secret: process.env.JWT_SECRET,
+                expiresIn: '1h'
+            }),
+            this.jwtService.signAsync({}, {
+                secret: process.env.RT_JWT_SECRET,
+                expiresIn: '1d',
+                subject: user.id
+            })
+        ])
+
+        return {
+            accessToken: at,
+            refreshToken: rt
+        }
+
     }
 
 }

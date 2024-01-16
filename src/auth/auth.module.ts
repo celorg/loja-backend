@@ -15,13 +15,13 @@ import { LoginValidationMiddleware } from './middlewares/login-validation.middle
   imports: [
       UserModule,
       PassportModule,
-      JwtModule.registerAsync({
-      useFactory: () => ({
-        secret: process.env.JWT_SECRET,
-        signOptions: { 
-          expiresIn: '1d'
-        }
-      })
+      JwtModule.register({
+      // useFactory: () => ({
+      //   secret: process.env.JWT_SECRET,
+      //   signOptions: { 
+      //     expiresIn: '1d'
+      //   }
+      // })
     })
   ],
   exports: [AuthService]
